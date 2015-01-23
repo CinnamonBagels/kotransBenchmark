@@ -19,6 +19,7 @@
 		}
 
 		console.log(fileQueue);
+		kotrans.client.sendFile(fileQueue.shift(), '');
 
 	});
 
