@@ -1,0 +1,15 @@
+{
+  "name": "Benchmark",
+  "version": "0.0.0",
+  "description": "Benchmark for various data-transfer techniques",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sam ko",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "binaryjs": "~0.2.1",
+    "express": "~4.11.0"
+  }
+}
