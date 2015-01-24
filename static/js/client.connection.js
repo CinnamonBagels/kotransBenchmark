@@ -75,6 +75,7 @@ kotrans.client = (function () {
     var cbHash = {};
 
     var start;
+    var timeTook;
 
     /**
      * creates a client object with a specified hostFileController on port 9000.
@@ -207,7 +208,8 @@ kotrans.client = (function () {
 	 * Sends a message to the server indicating that the file is done
 	 */
 	function finish() {
-		$('.information').append('time took: ' + var timeTook = ((new Date().getTime() - start) / 1000) + 's<br>');
+		timeTook = ((new Date().getTime() - start) / 1000)
+		$('.information').append('time took: ' + timeTook + 's<br>');
 		$('.information').append('That is a rate of: ' (file.size / 1000000 / timeTook) + ' MB/s<br>');
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
