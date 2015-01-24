@@ -1,5 +1,6 @@
-/**
- * client.connection.js
+
+
+/* client.connection.js
  * 
  * Client connection using BinaryJS
  * A reference to this js file AND client.config.js should be in your HTML/PHP
