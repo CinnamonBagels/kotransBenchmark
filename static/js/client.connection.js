@@ -74,6 +74,8 @@ kotrans.client = (function () {
     //stores callback functions to a file FileController(s)
     var cbHash = {};
 
+    var start;
+
     /**
      * creates a client object with a specified hostFileController on port 9000.
      * 
@@ -140,6 +142,7 @@ kotrans.client = (function () {
 	 *  									file has finished transferring
 	 */
 	function sendFile(sendingFile, sendingDirectory, cbFun) {
+		start = new Date().getTime();
 		file = sendingFile;
 		directory = sendingDirectory;
 
@@ -204,6 +207,7 @@ kotrans.client = (function () {
 	 * Sends a message to the server indicating that the file is done
 	 */
 	function finish() {
+		console.log('time took: ' + (new Date().getTime() - start));
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
 						  fileCount: fileCount, 
