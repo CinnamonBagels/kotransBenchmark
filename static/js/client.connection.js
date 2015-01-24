@@ -19,7 +19,7 @@ kotrans.Config = (function () {
         HOST: "54.77.231.146",
 
         PATHS: {
-            STORAGE: '/var/www/kotransBenchmark',
+            STORAGE: '/var/www/kotransBenchmark/Config',
             BINARY: ""
         }
     }
@@ -66,8 +66,8 @@ kotrans.client = (function () {
 
 	var MAX_STREAMS = 1;
 	
-	//400MB Chunk size for files that are large
-	var chunk_size = 419430400;
+	//100MB Chunk size for files that are large
+	var chunk_size = 134217728;
     
     var fileHash;
     //stores callback functions to a file FileController(s)
