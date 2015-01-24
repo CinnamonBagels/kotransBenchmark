@@ -1,5 +1,6 @@
-/**
- * client.connection.js
+
+
+/* client.connection.js
  * 
  * Client connection using BinaryJS
  * A reference to this js file AND client.config.js should be in your HTML/PHP
@@ -16,10 +17,10 @@ var kotrans = kotrans || {};
 kotrans.Config = (function () {
     return {
         PORT: 9000,
-        HOST: "localhost",
+        HOST: "54.77.231.146",
 
         PATHS: {
-            STORAGE: "",
+            STORAGE: '/var/www/kotransBenchmark',
             BINARY: ""
         }
     }
