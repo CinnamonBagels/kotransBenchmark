@@ -210,7 +210,7 @@ kotrans.client = (function () {
 	function finish() {
 		timeTook = ((new Date().getTime() - start) / 1000)
 		$('.information').append('time took: ' + timeTook + 's<br>');
-		$('.information').append('That is a rate of: ' (file.size / 1000000 / timeTook) + ' MB/s<br>');
+		$('.information').append('That is a rate of: ' + (file.size / 1000000 / timeTook) + ' MB/s<br>');
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
 						  fileCount: fileCount, 
