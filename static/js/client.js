@@ -4,7 +4,6 @@
 	var client;
 	var fileQueue;
 	var i;
-	console.log('why not working');
 	client = kotrans.client.createClient();
 
 	function stopEvent(event) {
