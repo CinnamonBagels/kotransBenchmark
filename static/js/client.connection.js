@@ -68,7 +68,7 @@ kotrans.client = (function () {
 	var MAX_STREAMS = 1;
 	
 	//100MB Chunk size for files that are large
-	var chunk_size = 134217728;
+	var chunk_size = 67108864;
     
     var fileHash;
     //stores callback functions to a file FileController(s)
