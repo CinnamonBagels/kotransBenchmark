@@ -103,7 +103,7 @@ kotrans.client = (function () {
 		client.on('stream', function (stream, meta) {
 			if (meta.cmd === Server2ClientFlag.sent) {
 				fileCount++;
-				console.log('done sending file chunk ' + meta.chunkName);
+				$('.information').append('done sending file chunk ' + meta.chunkName + '\n');
 				idleStreams.push(activeStreams.shift());
 				send();
 			} else if (meta.cmd === Server2ClientFlag.sentMul) {
@@ -159,7 +159,7 @@ kotrans.client = (function () {
 	 * into a queue.
 	 */
 	function initFile() {
-		console.log('Initializing file: '  + file.name);
+		$('.information').append('Initializing file: '  + file.name + '\n');
 
 		var currentSize = chunk_size;
 		fileChunks = [];
@@ -184,7 +184,7 @@ kotrans.client = (function () {
 	 * Helper function that sends single files to the server.
 	 */
 	function send() {
-		console.log('sending file: ' + file.name);
+		$('.information').append('sending file: ' + file.name + '\n');
 
 		if(fileChunks.length === 0) {
 			finish();
@@ -207,7 +207,7 @@ kotrans.client = (function () {
 	 * Sends a message to the server indicating that the file is done
 	 */
 	function finish() {
-		console.log('time took: ' + (new Date().getTime() - start));
+		$('.information').append('time took: ' + (new Date().getTime() - start) + '\n');
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
 						  fileCount: fileCount, 
