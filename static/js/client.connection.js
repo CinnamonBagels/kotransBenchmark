@@ -1,6 +1,5 @@
-
-
-/* client.connection.js
+ /**
+ * client.connection.js
  * 
  * Client connection using BinaryJS
  * A reference to this js file AND client.config.js should be in your HTML/PHP
@@ -14,19 +13,7 @@
 
 var kotrans = kotrans || {};
 
-kotrans.Config = (function () {
-    return {
-        PORT: 9000,
-        HOST: "localhost",
-
-        PATHS: {
-            STORAGE: '',
-            BINARY: ""
-        }
-    }
-})();
-
-kotrans.client = (function () {
+kotrans.client = (function ($) {
 	
 	//done signifies all file Chunks were transfered
 	var Client2ServerFlag = {
@@ -67,15 +54,15 @@ kotrans.client = (function () {
 
 	var MAX_STREAMS = 1;
 	
-	//100MB Chunk size for files that are large
-	var chunk_size = 67108864;
+	//400MB Chunk size for files that are large
+	var chunk_size = kotrans.config.CHUNK_SIZE;
     
     var fileHash;
     //stores callback functions to a file FileController(s)
     var cbHash = {};
 
-    var start;
-    var timeTook;
+    var timeTook,
+    	start;
 
     /**
      * creates a client object with a specified hostFileController on port 9000.
@@ -104,7 +91,7 @@ kotrans.client = (function () {
 		client.on('stream', function (stream, meta) {
 			if (meta.cmd === Server2ClientFlag.sent) {
 				fileCount++;
-				$('.information').append('done sending file chunk ' + meta.chunkName + '<br>');
+				console.log('done sending file chunk ' + meta.chunkName);
 				idleStreams.push(activeStreams.shift());
 				send();
 			} else if (meta.cmd === Server2ClientFlag.sentMul) {
@@ -115,11 +102,17 @@ kotrans.client = (function () {
 			} else if (meta.cmd === Server2ClientFlag.error) {
 				console.log(stream);
 				//notify client that there was an error.
+			} else if(meta.cmd === Client2ServerFlag.transferComplete) {
+
 			}
 		});
 		
 		client.on('close', function() {
 			console.log('Client connection was stopped abruptly');
+		});
+
+		client.on('error', function(error) {
+			console.log(error);
 		});
 		
 		return client;
@@ -143,7 +136,6 @@ kotrans.client = (function () {
 	 *  									file has finished transferring
 	 */
 	function sendFile(sendingFile, sendingDirectory, cbFun) {
-		start = new Date().getTime();
 		file = sendingFile;
 		directory = sendingDirectory;
 
@@ -160,7 +152,8 @@ kotrans.client = (function () {
 	 * into a queue.
 	 */
 	function initFile() {
-		$('.information').append('Initializing file: '  + file.name + '<br>');
+		start = new Date().getTime();
+		console.log('Initializing file: '  + file.name);
 
 		var currentSize = chunk_size;
 		fileChunks = [];
@@ -185,7 +178,7 @@ kotrans.client = (function () {
 	 * Helper function that sends single files to the server.
 	 */
 	function send() {
-		$('.information').append('sending file: ' + file.name + '<br>');
+		console.log('sending file: ' + file.name);
 
 		if(fileChunks.length === 0) {
 			finish();
@@ -208,9 +201,7 @@ kotrans.client = (function () {
 	 * Sends a message to the server indicating that the file is done
 	 */
 	function finish() {
-		timeTook = ((new Date().getTime() - start) / 1000)
-		$('.information').append('time took: ' + timeTook + 's<br>');
-		$('.information').append('That is a rate of: ' + (file.size / 1000000 / timeTook) + ' MB/s<br>');
+		console.log('time took: ' + (new Date().getTime() - start) + ms);
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
 						  fileCount: fileCount, 
@@ -342,4 +333,4 @@ kotrans.client = (function () {
 		sendFile: sendFile,
 		sendFileMul: sendFileMul
 	}
-})();
+})(jquery);
