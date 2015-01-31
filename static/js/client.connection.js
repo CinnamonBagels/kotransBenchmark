@@ -333,4 +333,4 @@ kotrans.client = (function ($) {
 		sendFile: sendFile,
 		sendFileMul: sendFileMul
 	}
-})(jquery);
+})(jQuery);
