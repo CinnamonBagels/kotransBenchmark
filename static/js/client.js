@@ -11,6 +11,7 @@
 		event.stopPropagation();
 	}
 
+	
 	$('#drop-box').on('drop', function(event) {
 		stopEvent(event);
 		for(i = 0; i < event.originalEvent.dataTransfer.files.length; ++i) {

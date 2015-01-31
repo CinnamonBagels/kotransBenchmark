@@ -17,10 +17,10 @@ var kotrans = kotrans || {};
 kotrans.Config = (function () {
     return {
         PORT: 9000,
-        HOST: "54.77.231.146",
+        HOST: "localhost",
 
         PATHS: {
-            STORAGE: '/var/www/kotransBenchmark/Config',
+            STORAGE: '',
             BINARY: ""
         }
     }
