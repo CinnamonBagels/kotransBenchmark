@@ -11,12 +11,28 @@
 		event.stopPropagation();
 	}
 
-	
+	function createProgressBar() {
+		$('#information').prepend('<div class="progress">\
+  <span class="meter"></span>\
+</div>');
+	}
+
+	client.on('stream', function(data) {
+		if(data.percent) {
+			$('.meter').css('width', data.percent);
+			$('.meter').text(data.percent);
+		}
+	});
+
 	$('#drop-box').on('drop', function(event) {
 		stopEvent(event);
 		for(i = 0; i < event.originalEvent.dataTransfer.files.length; ++i) {
 			fileQueue.push(event.originalEvent.dataTransfer.files[i]);
 		}
+
+		fileQueue.forEach(function(file) {
+			createProgressBar();
+		})
 
 		console.log(fileQueue);
 		kotrans.client.sendFile(fileQueue.shift(), '');

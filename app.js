@@ -9,18 +9,12 @@ var Config = require('./config/app.config');
 var express = require('express');
 var app = express();
 var BinaryServer = require('binaryjs').BinaryServer;
-var kotrans = require('kotrans/Server/server.connection');
+var kotrans = require('kotrans');
 var port = Config.PORTDEV;
-
-console.log(kotrans);
 
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', function(req, res) {
 });
 
-kotrans.createServer();
-
-app.listen(port, function() {
-	console.log('Server listening on port ' + port);
-});
+kotrans.createServer({server: app, port: 8443}, function() { console.log('woo!')});
