@@ -6,7 +6,7 @@
   "dependencies": {
     "express": "~4.11.2",
     "binaryjs": "~0.2.1",
-    "kotrans": "0.1.0"
+    "kotrans": "*"
   },
   "devDependencies": {},
   "scripts": {
