@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "express": "~4.11.2",
     "binaryjs": "~0.2.1",
-    "kotrans": "*"
+    "express": "~4.12.2",
+    "kotrans": "^0.1.6"
   },
   "devDependencies": {},
   "scripts": {
