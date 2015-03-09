@@ -71,8 +71,14 @@ kotrans.client = (function () {
      * @return Client object
      */
 	function createClient(options) {
-		clientHost = options.host || 'localhost';
-		clientPort = options.port || 9000;
+		if(options) {
+			clientHost = options.host || 'localhost';
+			clientPort = options.port || 9000;
+		} else {
+			clientHost = 'localhost';
+			clientPort = 9000;
+		}
+		
 		client = new BinaryClient('ws://' + clientHost + ':' + clientPort + '/');
 
 		if(client == false) {
@@ -107,7 +113,6 @@ kotrans.client = (function () {
 				idleStreams.push(activeStreams.shift());
 				sendMul();
 			} else if (meta.cmd === Server2ClientFlag.error) {
-				console.log(stream);
 				//notify client that there was an error.
 			} else if(meta.cmd === Client2ServerFlag.transferComplete) {
 
@@ -208,7 +213,6 @@ kotrans.client = (function () {
 	 * Sends a message to the server indicating that the file is done
 	 */
 	function finish() {
-		console.log('time took: ' + (new Date().getTime() - start) + ms);
 		client.send({}, { fileName: file.name,
 						  fileSize: file.size, 
 						  fileCount: fileCount, 
