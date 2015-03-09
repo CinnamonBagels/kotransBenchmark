@@ -5,6 +5,9 @@
 		var client;
 		var fileQueue = [];
 		var i;
+		var start;
+		var end;
+		var file;
 		client = kotrans.client.createClient();
 
 		function stopEvent(event) {
@@ -13,9 +16,9 @@
 		}
 
 		function createProgressBar() {
-			$('#information').prepend('<div class="progress">\
-	  <span class="meter"></span>\
-	</div>');
+			$('.information').prepend('<div class="progress">\
+		  		<span class="meter" style="width: 0">0%</span>\
+			</div>');
 		}
 
 		// client.on('stream', function(data) {
@@ -31,12 +34,16 @@
 				fileQueue.push(event.originalEvent.dataTransfer.files[i]);
 			}
 
-			fileQueue.forEach(function(file) {
-				createProgressBar();
-			})
+			createProgressBar();
 
 			console.log(fileQueue);
-			kotrans.client.sendFile(fileQueue.shift(), '');
+
+			file = fileQueue.shift();
+			start = new Date().getTime();
+			kotrans.client.sendFile(file, function() {
+				end = new Date().getTime() - start;
+				console.log('Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).precision(4) + 'MB/s');
+			}) 
 
 		});
 
