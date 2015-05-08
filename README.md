@@ -2,7 +2,7 @@ This is an example server that shows how kotrans could be used.
 
 You have been provided with a server AS is, but first we need to download some dependencies.
 
-##Node.js
+#Node.js
 
 on the Terminal as root or sudo, enter these commands:
 ```
@@ -23,12 +23,12 @@ $ apt-get install -y git
 ```
 and then grab the repository
 ```
-$ git clone https://cinnamonbagels/kotransExample.git
+$ git clone https://github.com/cinnamonbagels/kotransExample.git
 ```
 
-##Setting up the server
+#Setting up the server
 
-#app.config.js
+##app.config.js
 `$ cd kotransExample/config/` and edit the file `app.config.js`
 
 ```javascript
@@ -41,7 +41,8 @@ module.exports = {
 * `port` : can be changed to a different number, or left as is.
 * `path` : can be any path you want except `/`. You may leave it as it is.
 * `allowed_directory` : This will be the directory that transferred files will go. You must provide the absolute path to the directory you wish to put your files. Make sure that the file has the correct permissions (See node permissions below). If left as is, files will be placed in `kotransExample/node_modules/kotrans/Server/`.
-#client.config.js
+
+##client.config.js
 `$ cd kotransExample/static/js/` and edit the file `client.config.js`
 
 ```javascript
@@ -60,7 +61,7 @@ configParams = {
 * `path` : The path that you specified in `app.config.js`. You may leave it as it is.
 
 
-##Setting node permissions
+#Setting node permissions
 We want to make sure that when you transfer files to the server, that node has the requisite permissions to perform tasks.
 
 Ensure that `kotransExample/` is not under root control by typing `ls -la` just outside of the `kotransExample/` directory.
@@ -70,13 +71,13 @@ drwxr-xr-x  6 user  user    4096 May  7 19:42 kotransExample
 ```
 * owner must not be root
 
-And the file that you want to store uploaded content to is under user control
+And the folder that you want to store uploaded content to is under user control
 ```
 user@User-Linux ~/someDirectory $ ls -la
 drwxr-xr-x  6 user  user    4096 May  7 19:42 folderToPutFilesIn
 ```
 
-##Starting the Server
+#Starting the Server
 To start the server, `cd kotransExample/` and enter:
 ```
 $ node app.js
@@ -87,4 +88,18 @@ It is working properly if you see something similar:
 Web server listening on port 9000
 ```
 
-#You can now open up your browser and drag-and-drop files into the black box provided.
+##You can now open up your browser and drag-and-drop files into the black box provided.
+
+#Benchmarking
+I have added some simple statistics to benchmark kotrans. In order to view this on your browser, open up your developer console.
+
+* Chrome
+** Windows `ctrl + shift + j`
+** Mac `cmd + opt + j`
+* Safari
+** [Enable developer tools](https://developer.apple.com/library/mac/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html)
+* Firefox
+** Windows `ctrl + shift + k`
+** Mac `cmd + opt + k`
+
+When you drag and drop a file, it will initialize and upon successful transfer, show the time it took to transfer in seconds, with a rough estimate of the amount transferred in MB/s.
