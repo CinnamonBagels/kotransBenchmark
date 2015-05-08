@@ -1,4 +1,5 @@
 module.exports = {
-	PORT : 8443,
-	PORTDEV : 8443
+	port : 9000,
+	path : '/sendData',
+	allowed_directory : ''
 }

@@ -11,21 +11,18 @@ var app = express();
 // var BinaryServer = require('binaryjs').BinaryServer;
 var BinaryServer;
 var kotrans = require('kotrans');
-var port = Config.PORTDEV;
+var port = Config.port;
 
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', function(req, res) {
 });
 
-BinaryServer = http.createServer().listen(9000, function() {
-	console.log('Binary Server listening on port 9000');
-}); 
+app.post('/sendData', function(req, res) {
 
-kotrans.createServer({server: BinaryServer}, function() { 
-	console.log('woo!')
 });
+var server = http.createServer(app).listen(port);
 
-app.listen(8443, function() {
-	console.log('Web server listening on port 8443');
-})
+kotrans.createServer({server: server, route : Config.path, directory : Config.allowed_directory }, function() { 
+	console.log('Web server listening on port ' + port);
+});

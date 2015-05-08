@@ -1,71 +1,50 @@
 'use strict';
 
-(function($, undefined) {
-	$(document).ready(function() {
-		var client;
-		var fileQueue = [];
-		var i;
-		var start;
-		var end;
-		var file;
-		client = kotrans.client.createClient();
+var client;
+var fileQueue = [];
+var i;
+var start;
+var end;
+var file;
+var config = configParams;
+var filesdiv = document.getElementById('files');
+kotrans.client.createClient({ host : config.host, path : config.path, port : config.port, no_streams : config.no_streams });
 
-		function stopEvent(event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
+function stopEvent(event) {
+	event.preventDefault();
+	event.stopPropagation();
+}
 
-		function createProgressBar() {
-			$('.information').prepend('<div class="progress">\
-		  		<span class="meter" style="width: 0">0%</span>\
-			</div>');
-		}
+function drop(event) {
+	stopEvent(event);
+	for(i = 0; i < event.dataTransfer.files.length; ++i) {
+		fileQueue.push(event.dataTransfer.files[i]);
+	}
+	startTransfer();
+}
 
-		// client.on('stream', function(data) {
-		// 	if(data.percent) {
-		// 		$('.meter').css('width', data.percent);
-		// 		$('.meter').text(data.percent);
-		// 	}
-		// });
-
-		$('#drop-box').on('drop', function(event) {
-			stopEvent(event);
-			for(i = 0; i < event.originalEvent.dataTransfer.files.length; ++i) {
-				fileQueue.push(event.originalEvent.dataTransfer.files[i]);
-			}
-
-			createProgressBar();
-
-			console.log(fileQueue);
-
-			file = fileQueue.shift();
-			start = new Date().getTime();
-			kotrans.client.sendFile(file, function() {
-				end = new Date().getTime() - start;
-				console.log('Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).precision(4) + 'MB/s');
-			}) 
-
+function startTransfer() {
+	var element;
+	var finishedElement;
+	if(!file) {
+		file = fileQueue.shift();
+		//element = document.createElement('p');
+		//element.innerHTML = file.name;
+		//filesdiv.appendChild(element);
+		start = new Date().getTime();
+		kotrans.client.sendFile(file, function() {
+			end = new Date().getTime() - start;
+			//finishedElement = document.createElement('p');
+			//finishedElement.innerHTML = 'Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).toPrecision(4) + 'MB/s';
+			//filesdiv.appendChild(finishedElement);
+			console.log('Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).toPrecision(4) + 'MB/s');
+			file = null;
 		});
+	}
+}
 
-		$('#drop-box').on('dragenter', function(event) {
-			stopEvent(event);
-		});
-
-		$('#drop-box').on('dragover', function(event) {
-			stopEvent(event);
-		});
-
-		// client.on('open', function() {
-		// 	fileQueue = [];
-		// 	console.log('Client stuf stuf here');
-		// });
-
-		// client.on('stream', function(stream, meta) {
-
-		// });
-
-		// client.on('close', function() {
-		// 	console.log('client closed');
-		// })	
-	});
-})(jQuery);
+window.setInterval(function() {
+	if(fileQueue.length > 0) {
+		startTransfer();
+	}
+}, 3000);
