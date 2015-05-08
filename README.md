@@ -94,12 +94,12 @@ Web server listening on port 9000
 I have added some simple statistics to benchmark kotrans. In order to view this on your browser, open up your developer console.
 
 * Chrome
-** Windows `ctrl + shift + j`
-** Mac `cmd + opt + j`
+  * Windows `ctrl + shift + j`
+  * Mac `cmd + opt + j`
 * Safari
-** [Enable developer tools](https://developer.apple.com/library/mac/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html)
+  * [Enable developer tools](https://developer.apple.com/library/mac/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html)
 * Firefox
-** Windows `ctrl + shift + k`
-** Mac `cmd + opt + k`
+  * Windows `ctrl + shift + k`
+  * Mac `cmd + opt + k`
 
 When you drag and drop a file, it will initialize and upon successful transfer, show the time it took to transfer in seconds, with a rough estimate of the amount transferred in MB/s.
