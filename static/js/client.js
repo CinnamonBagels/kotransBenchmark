@@ -7,6 +7,7 @@ var start;
 var end;
 var file;
 var config = configParams;
+var done = true;
 var filesdiv = document.getElementById('files');
 kotrans.client.createClient({ host : config.host, path : config.path, port : config.port, no_streams : config.no_streams });
 
@@ -24,27 +25,16 @@ function drop(event) {
 }
 
 function startTransfer() {
-	var element;
-	var finishedElement;
-	if(!file) {
+	if(done && !file && fileQueue.length > 0) {
+		done = false;
 		file = fileQueue.shift();
-		//element = document.createElement('p');
-		//element.innerHTML = file.name;
-		//filesdiv.appendChild(element);
 		start = new Date().getTime();
 		kotrans.client.sendFile(file, function() {
 			end = new Date().getTime() - start;
-			//finishedElement = document.createElement('p');
-			//finishedElement.innerHTML = 'Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).toPrecision(4) + 'MB/s';
-			//filesdiv.appendChild(finishedElement);
 			console.log('Took ' + (end / 1000) + 's at a rough estimate of ' + ((file.size / 1000000) / (end / 1000)).toPrecision(4) + 'MB/s');
 			file = null;
+			done = true;
+			startTransfer();
 		});
 	}
 }
-
-window.setInterval(function() {
-	if(fileQueue.length > 0) {
-		startTransfer();
-	}
-}, 3000);

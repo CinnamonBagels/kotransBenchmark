@@ -66,7 +66,7 @@ kotrans.client = (function () {
 	}
 
 	function initClient(host, port, path) {
-		var client = new BinaryClient('ws://' + host + ':' + port + path);
+		var client = location.protocol === 'https:' ? new BinaryClient('wss://' + host + ':' + port + path) : new BinaryClient('ws://' + host + ':' + port + path);
 
 		client.on('open', function() {
 			client.pid = clientids++;
@@ -99,6 +99,7 @@ kotrans.client = (function () {
 				finish();
 			} else if(meta.cmd === Server2ClientFlag.updateClient) {
 				//Will be sent the file name and the % compete
+				//lots of overhead if client that is sending is also giving updates.
 			}
 		});
 
@@ -150,15 +151,16 @@ kotrans.client = (function () {
 
 	function send() {
 		clients.forEach(function(client) {
-			//console.log('client ' + client.pid + ' is attempting to transfer file ' + file.name + '_' + chunkNumber);
-			var chunk = fileChunks.shift();
-			client.send(chunk, {
-				chunkName : file.name + '_' + chunkNumber++,
-				chunkSize : chunk.size,
-				fileSize : file.size,
-				fileName : file.name,
-				cmd : Client2ServerFlag.send
-			});
+			if(fileChunks.length !== 0) {
+				var chunk = fileChunks.shift();
+				client.send(chunk, {
+					chunkName : file.name + '_' + chunkNumber++,
+					chunkSize : chunk.size,
+					fileSize : file.size,
+					fileName : file.name,
+					cmd : Client2ServerFlag.send
+				});
+			}
 		});
 	}
 
