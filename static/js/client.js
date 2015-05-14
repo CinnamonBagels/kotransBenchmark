@@ -26,6 +26,7 @@ function drop(event) {
 
 function startTransfer() {
 	if(done && !file && fileQueue.length > 0) {
+		console.log('sending file');
 		done = false;
 		file = fileQueue.shift();
 		start = new Date().getTime();

@@ -1,3 +1,4 @@
+'use strict';
 var configParams = {};
 
 configParams = {

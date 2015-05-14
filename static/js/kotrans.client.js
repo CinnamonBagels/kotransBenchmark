@@ -19,7 +19,8 @@ kotrans.client = (function () {
 	var Client2ServerFlag = {
 		send: 'send',
 		sendMul: 'sendMul',
-		transferComplete: 'transferComplete'
+		transferComplete: 'transferComplete',
+		setup : 'setup'
 	}
 	
 	//sent signifies that the file chunk was sent.
@@ -27,7 +28,8 @@ kotrans.client = (function () {
 		sent: 'sent',
 		updateClient: 'updateClient',
 		commandComplete: 'commandComplete',
-		error: 'error'
+		error: 'error',
+		setup : 'setup'
 	}
 
 	var file;
@@ -38,7 +40,7 @@ kotrans.client = (function () {
 
     var timeTook,
     	start;
-
+   	var mainClient;
     var clients;
     var clientids;
     var chunkNumber;
@@ -52,13 +54,25 @@ kotrans.client = (function () {
 		var port = options.port || '9000';
 		var streams = options.no_streams || 2;
 		var path = options.path || '';
-
-		// init
+		mainClient = location.protocol === 'https:' ? new BinaryClient('wss://' + host + ':' + port + path) : new BinaryClient('ws://' + host + ':' + port + path);
+		
+		
 		clients = [];
 		clientids = 0;
 		allTransferred = false;
 		sentChunks = 0;
 		// init
+		mainClient.on('open', function() {
+			mainClient.pid = clientids++;
+			console.log('client ' + mainClient.pid + ' connected to server.');
+			
+		});
+
+		mainClient.on('stream', function(stream, meta) {
+			if(meta.cmd === Server2ClientFlag.commandComplete) {
+				finish();
+			}
+		})
 
 		for(i = 0; i < streams; ++i) {
 			clients.push(initClient(host, port, path));
@@ -121,7 +135,7 @@ kotrans.client = (function () {
 		allTransferred = false;
 		file = sendingFile;
 		chunkNumber = 0;
-
+		mainClient.send({}, { cmd : Client2ServerFlag.setup });
 		callback = callback || cbFun;
 		initFile();
 	}	
