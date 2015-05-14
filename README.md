@@ -33,11 +33,17 @@ $ git clone https://github.com/cinnamonbagels/kotransExample.git
 
 ```javascript
 module.exports = {
+	cert : '',
+	key : '',
+	secure : false,
 	port : 9000,
 	path : '/sendData',
 	allowed_directory : ''
 }
 ```
+* `cert` : If you choose to connect to this server through SSL, you must provide the absolute path to your server certificate.
+* `key` : If you choose to connect to this server through SSL, you must provide the aboslute path to your server key.
+* `secure` : Set this flag to true if you wish to access your website through `https://`, which encrypts your data sent to the server. Otherwise, you will access your website through `http://`, and your data will be unencrypted.
 * `port` : can be changed to a different number, or left as is.
 * `path` : can be any path you want except `/`. You may leave it as it is.
 * `allowed_directory` : This will be the directory that transferred files will go. You must provide the absolute path to the directory you wish to put your files. Make sure that the file has the correct permissions (See node permissions below). If left as is, files will be placed in `kotransExample/node_modules/kotrans/Server/`.

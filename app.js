@@ -13,8 +13,19 @@ var app = express();
 var BinaryServer;
 var kotrans = require('kotrans');
 var port = Config.port;
-var privateKey = fs.readFileSync('./private.pem', 'utf8');
-var publicKey = fs.readFileSync('./server.crt', 'utf8');
+var secure = Config.secure;
+if(!Config.key && Config.secure) {
+	throw 'You did not set your Server Key';
+	process.exit();
+}
+
+if(!Config.cert && Config.secure) {
+	throw 'You did not set your Server Key';
+	process.exit();
+}
+
+var privateKey = secure ? fs.readFileSync(Config.key, 'utf8') : '';
+var publicKey = secure ? fs.readFileSync(Config.cert, 'utf8') : '';
 
 var credentials = {
 	key : privateKey,
@@ -25,14 +36,16 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 app.use(function(req, res) {
 	console.log(req.secure);
-})
+});
+
+var info;
+info = secure ? 'secure ' : '';
 
 app.post('/sendData', function(req, res) {
 
 });
-var server = http.createServer(app).listen(port + 1);
-var secureServer = https.createServer(credentials, app).listen(port);
+var server = secure ? https.createServer(credentials, app).listen(port) : http.createServer(app).listen(port);
 
-kotrans.createServer({ server: secureServer, route : Config.path, directory : Config.allowed_directory }, function() { 
-	console.log('Web server listening on secure port ' + port);
+kotrans.createServer({ server: server, route : Config.path, directory : Config.allowed_directory }, function() { 
+	console.log('Web server listening on ' + info + 'port ' + port);
 });
