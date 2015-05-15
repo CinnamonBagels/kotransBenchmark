@@ -2,7 +2,7 @@ This is an example server that shows how kotrans could be used.
 
 You have been provided with a server AS is, but first we need to download some dependencies. 
 
-###This example is not meant for developers to test kotrans on. There is a separate module that is intended for developers [on github](https://github.com/cinnamonbagels/kotrans) and [on the npm registry](https://npmjs.org/package/kotrans)
+###This example is not meant for developers as a means to use kotrans. There is a separate module that is intended for developers [on github](https://github.com/cinnamonbagels/kotrans) and [on the npm registry](https://npmjs.org/package/kotrans)
 
 #Node.js
 
