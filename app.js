@@ -20,7 +20,7 @@ if(!Config.key && Config.secure) {
 }
 
 if(!Config.cert && Config.secure) {
-	throw 'You did not set your Server Key';
+	throw 'You did not set your Server certificate';
 	process.exit();
 }
 
@@ -39,7 +39,7 @@ app.use(function(req, res) {
 });
 
 var info;
-info = secure ? 'secure ' : '';
+info = secure ? 'secure ' : 'unsecure ';
 
 app.post('/sendData', function(req, res) {
 

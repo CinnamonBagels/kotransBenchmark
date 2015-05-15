@@ -1,6 +1,8 @@
 This is an example server that shows how kotrans could be used.
 
-You have been provided with a server AS is, but first we need to download some dependencies.
+You have been provided with a server AS is, but first we need to download some dependencies. 
+
+###This example is not meant for developers to test kotrans on. There is a separate module that is intended for developers [on github](https://github.com/cinnamonbagels/kotrans) and [on the npm registry](https://npmjs.org/package/kotrans)
 
 #Node.js
 
@@ -33,17 +35,17 @@ $ git clone https://github.com/cinnamonbagels/kotransExample.git
 
 ```javascript
 module.exports = {
+	secure : false,
 	cert : '',
 	key : '',
-	secure : false,
 	port : 9000,
 	path : '/sendData',
 	allowed_directory : ''
 }
 ```
-* `cert` : If you choose to connect to this server through SSL, you must provide the absolute path to your server certificate.
-* `key` : If you choose to connect to this server through SSL, you must provide the aboslute path to your server key.
-* `secure` : Set this flag to true if you wish to access your website through `https://`, which encrypts your data sent to the server. Otherwise, you will access your website through `http://`, and your data will be unencrypted.
+* `secure` : Set this flag to true if you wish to access your website through `https://`. Otherwise, you will access your website through `http://`.
+* `cert` : If you choose to connect to this server through SSL, you must provide the absolute path to your server certificate. `seucre` flag must be set to true.
+* `key` : If you choose to connect to this server through SSL, you must provide the aboslute path to your server key. `secure` flag must be set to true.
 * `port` : can be changed to a different number, or left as is.
 * `path` : can be any path you want except `/`. You may leave it as it is.
 * `allowed_directory` : This will be the directory that transferred files will go. You must provide the absolute path to the directory you wish to put your files. Make sure that the file has the correct permissions (See node permissions below). If left as is, files will be placed in `kotransExample/node_modules/kotrans/Server/`.
@@ -104,7 +106,7 @@ I have added some simple statistics to benchmark kotrans. In order to view this 
   * Mac `cmd + opt + j`
 * Safari
   * [Enable developer tools](https://developer.apple.com/library/mac/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html)
-* Firefox
+* Firefox (Best performance so far)
   * Windows `ctrl + shift + k`
   * Mac `cmd + opt + k`
 
