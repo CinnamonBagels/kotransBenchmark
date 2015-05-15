@@ -46,6 +46,6 @@ app.post('/sendData', function(req, res) {
 });
 var server = secure ? https.createServer(credentials, app).listen(port) : http.createServer(app).listen(port);
 
-kotrans.createServer({ server: server, route : Config.path, directory : Config.allowed_directory }, function() { 
+kotrans.createServer({ server: server, path : Config.path, directory : Config.allowed_directory }, function() { 
 	console.log('Web server listening on ' + info + 'port ' + port);
 });
