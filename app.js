@@ -35,7 +35,6 @@ var credentials = {
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.use(function(req, res) {
-	console.log(req.secure);
 });
 
 var info;
