@@ -81,6 +81,8 @@ kotrans.client = (function () {
 		for(i = 0; i < streams; ++i) {
 			clients.push(initClient(host, port, path));
 		}
+
+		return mainClient;
 	}
 
 	function initClient(host, port, path) {
@@ -138,8 +140,9 @@ kotrans.client = (function () {
 		sentChunks = 0;
 		allTransferred = false;
 		file = sendingFile;
+		console.log(file);
 		chunkNumber = 0;
-		mainClient.send({}, { cmd : Client2ServerFlag.setup });
+		mainClient.send({}, { cmd : Client2ServerFlag.setup, fileSize : file.size / 1000000 });
 		callback = callback || cbFun;
 		initFile();
 	}	
@@ -166,8 +169,11 @@ kotrans.client = (function () {
 		totalChunks = fileChunks.length;
 		send();
 	}
-
+	var interval;
 	function send() {
+		interval = setInterval(function() {
+			mainClient.send({}, { cmd : Server2ClientFlag.updateClient });
+		}, 1000);
 		clients.forEach(function(client) {
 			if(fileChunks.length !== 0) {
 				var chunk = fileChunks.shift();
@@ -183,6 +189,7 @@ kotrans.client = (function () {
 	}
 
 	function finish() {
+		clearInterval(interval);
 		if(callback) {
 			callback();
 		}

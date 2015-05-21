@@ -48,10 +48,10 @@ module.exports = {
 * `key` : If you choose to connect to this server through SSL, you must provide the aboslute path to your server key. `secure` flag must be set to true.
 * `port` : can be changed to a different number, or left as is.
 * `path` : can be any path you want except `/`. You may leave it as it is.
-* `allowed_directory` : This will be the directory that transferred files will go. You must provide the absolute path to the directory you wish to put your files. Make sure that the file has the correct permissions (See node permissions below). If left as is, files will be placed in `kotransExample/node_modules/kotrans/Server/`.
+* `allowed_directory` : This will be the directory that transferred files will go. You must provide the absolute path to the directory you wish to put your files. Make sure that the file has the correct permissions (See node permissions below). If left as is, files will be placed in `/kotransExample/uploads/`.
 
 ##client.config.js
-`$ cd kotransExample/static/js/` and edit the file `client.config.js`
+In the same directory, edit the file `client.config.js`
 
 ```javascript
 var configParams = {};
@@ -97,17 +97,3 @@ Web server listening on port 9000
 ```
 
 ##You can now open up your browser and drag-and-drop files into the black box provided.
-
-#Benchmarking
-I have added some simple statistics to benchmark kotrans. In order to view this on your browser, open up your developer console.
-
-* Chrome
-  * Windows `ctrl + shift + j`
-  * Mac `cmd + opt + j`
-* Safari
-  * [Enable developer tools](https://developer.apple.com/library/mac/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html)
-* Firefox (Best performance so far)
-  * Windows `ctrl + shift + k`
-  * Mac `cmd + opt + k`
-
-When you drag and drop a file, it will initialize and upon successful transfer, show the time it took to transfer in seconds, with a rough estimate of the amount transferred in MB/s.
