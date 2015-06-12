@@ -64,7 +64,7 @@ kotrans.client = (function () {
 		// init
 		mainClient.on('open', function() {
 			mainClient.pid = clientids++;
-			console.log('client ' + mainClient.pid + ' connected to server.');
+			//console.log('client ' + mainClient.pid + ' connected to server.');
 			
 		});
 
@@ -90,7 +90,7 @@ kotrans.client = (function () {
 
 		client.on('open', function() {
 			client.pid = clientids++;
-			console.log('client ' + client.pid + ' connected to server.');
+			//console.log('client ' + client.pid + ' connected to server.');
 		});
 
 		client.on('stream', function(stream, meta) {

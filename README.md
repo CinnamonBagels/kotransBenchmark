@@ -88,7 +88,7 @@ drwxr-xr-x  6 user  user    4096 May  7 19:42 folderToPutFilesIn
 #Starting the Server
 To start the server, `cd kotransExample/` and enter:
 ```
-$ node app.js
+$ node app
 ```
 
 It is working properly if you see something similar:
