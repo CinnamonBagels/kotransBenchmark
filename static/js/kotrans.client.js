@@ -20,7 +20,9 @@ kotrans.client = (function () {
 		send: 'send',
 		sendMul: 'sendMul',
 		transferComplete: 'transferComplete',
-		setup : 'setup'
+		setup : 'setup',
+		stream_id : 'stream_id',
+		main_id : 'main_id'
 	}
 	
 	//sent signifies that the file chunk was sent.
@@ -34,6 +36,7 @@ kotrans.client = (function () {
 
 	var file;
 
+	var mainClientID;
 	//stores
 	var fileChunks;
 	var chunk_size = 4194304;
@@ -64,32 +67,43 @@ kotrans.client = (function () {
 		// init
 		mainClient.on('open', function() {
 			mainClient.pid = clientids++;
-			//console.log('client ' + mainClient.pid + ' connected to server.');
-			
+			mainClient.send({}, {
+				cmd : Client2ServerFlag.main_id
+			});
 		});
 
 		mainClient.on('stream', function(stream, meta) {
 			if(meta.cmd === Server2ClientFlag.commandComplete) {
 				finish();
+			} else if(meta.cmd === Client2ServerFlag.main_id) {
+				mainClientID = meta.main_id;
+
+				for(i = 0; i < streams; ++i) {
+					clients.push(initClient(host, port, path));
+				}
 			}
 		});
 
 		mainClient.on('error', function(err) {
 			throw err;
-		})
+		});
 
-		for(i = 0; i < streams; ++i) {
-			clients.push(initClient(host, port, path));
-		}
+		mainClient.on('close', function() {
+			
+		});
 
 		return mainClient;
 	}
 
 	function initClient(host, port, path) {
 		var client = location.protocol === 'https:' ? new BinaryClient('wss://' + host + ':' + port + path) : new BinaryClient('ws://' + host + ':' + port + path);
-
 		client.on('open', function() {
 			client.pid = clientids++;
+
+			client.send('', {
+				cmd : Client2ServerFlag.stream_id,
+				main_id : mainClientID
+			});
 			//console.log('client ' + client.pid + ' connected to server.');
 		});
 
@@ -102,7 +116,8 @@ kotrans.client = (function () {
 						client.send({}, {
 							fileName : file.name,
 							fileSize : file.size,
-							cmd : Client2ServerFlag.transferComplete
+							cmd : Client2ServerFlag.transferComplete,
+							main_id : mainClientID
 						});
 					} 
 				} else {
@@ -120,6 +135,9 @@ kotrans.client = (function () {
 			} else if(meta.cmd === Server2ClientFlag.updateClient) {
 				//Will be sent the file name and the % compete
 				//lots of overhead if client that is sending is also giving updates.
+			} else if(meta.cmd === Client2ServerFlag.main_id) {
+			} else if(meta.cmd === Client2ServerFlag.stream_id) {
+
 			}
 		});
 

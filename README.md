@@ -57,13 +57,13 @@ In the same directory, edit the file `client.config.js`
 var configParams = {};
 
 configParams = {
-	no_streams : 4,
+	no_streams : 2,
 	host : '',
 	port : '',
 	path : '/sendData'
 };
 ```
-* `no_streams` : Number of concurrent streams. More streams means faster data transfer, but too many streams causes diminishing returns. We left it at 4.
+* `no_streams` : Number of concurrent streams. More streams means faster data transfer, but too many streams causes diminishing returns. We left it at 2.
 * `host` : The IP/domain that your server is running on. Leave it as is, and you may test it locally on localhost.
 * `port` : The port that your server is running on. It should match the port that you specified in `app.config.js`.
 * `path` : The path that you specified in `app.config.js`. You may leave it as it is.

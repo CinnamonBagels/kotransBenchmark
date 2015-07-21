@@ -2,7 +2,7 @@
 var configParams = {};
 
 configParams = {
-	no_streams : 4,
+	no_streams : 2,
 	host : '',
 	port : '',
 	path : '/sendData'
