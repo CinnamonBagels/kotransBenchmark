@@ -97,3 +97,8 @@ Web server listening on port 9000
 ```
 
 ##You can now open up your browser and drag-and-drop files into the black box provided.
+
+Some Notes:
+* If connection is lost, all files that have not finished transferring will be deleted, however, files that have already been successfully transferred will not be affected.
+* If a file is being uploaded and it already exists (By name only, not file size nor content), kotrans will append an identifier to indicate that it is a different file
+*   File.txt is being transferred, but it already exists, so File.txt will be renamed to File(1).txt

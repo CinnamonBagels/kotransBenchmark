@@ -22,7 +22,8 @@ kotrans.client = (function () {
 		transferComplete: 'transferComplete',
 		setup : 'setup',
 		stream_id : 'stream_id',
-		main_id : 'main_id'
+		main_id : 'main_id',
+		exists : 'exists'
 	}
 	
 	//sent signifies that the file chunk was sent.
@@ -31,10 +32,12 @@ kotrans.client = (function () {
 		updateClient: 'updateClient',
 		commandComplete: 'commandComplete',
 		error: 'error',
-		setup : 'setup'
+		setup : 'setup',
+		existsResult : 'existsResult'
 	}
 
 	var file;
+	var fileName;
 
 	var mainClientID;
 	//stores
@@ -81,6 +84,18 @@ kotrans.client = (function () {
 				for(i = 0; i < streams; ++i) {
 					clients.push(initClient(host, port, path));
 				}
+			} else if(meta.cmd === Server2ClientFlag.existsResult) {
+				var tmp = file.name.split('.'); tmp[0] = tmp[0].concat(+meta.iteration === 0 ? '' : '(' + meta.iteration + ')');
+				fileName = tmp.join('.');
+				if(meta.exists) {
+					mainClient.send({}, {
+						cmd : Client2ServerFlag.exists,
+						fileName : file.name,
+						iteration : ++meta.iteration
+					})
+				} else {
+					send();
+				}
 			}
 		});
 
@@ -89,7 +104,7 @@ kotrans.client = (function () {
 		});
 
 		mainClient.on('close', function() {
-			
+
 		});
 
 		return mainClient;
@@ -104,17 +119,16 @@ kotrans.client = (function () {
 				cmd : Client2ServerFlag.stream_id,
 				main_id : mainClientID
 			});
-			//console.log('client ' + client.pid + ' connected to server.');
 		});
 
 		client.on('stream', function(stream, meta) {
 			if(meta.cmd === Server2ClientFlag.sent) {
-				//console.log('client ' + client.pid + ' successfully transfered.');
-				allTransferred = (totalChunks === ++sentChunks); //&& fileOverflow.length === 0;
+				
+				allTransferred = (totalChunks === ++sentChunks);
 				if(fileChunks.length === 0) {
 					if(allTransferred) {
 						client.send({}, {
-							fileName : file.name,
+							fileName : fileName,
 							fileSize : file.size,
 							cmd : Client2ServerFlag.transferComplete,
 							main_id : mainClientID
@@ -123,10 +137,10 @@ kotrans.client = (function () {
 				} else {
 					var chunk = fileChunks.shift();
 					client.send(chunk, {
-						chunkName : file.name + '_' + chunkNumber++,
+						chunkName : fileName + '_' + chunkNumber++,
 						chunkSize : chunk.size,
 						fileSize : file.size,
-						fileName : file.name,
+						fileName : fileName,
 						cmd : Client2ServerFlag.send
 					});
 				}
@@ -158,7 +172,6 @@ kotrans.client = (function () {
 		sentChunks = 0;
 		allTransferred = false;
 		file = sendingFile;
-		console.log(file);
 		chunkNumber = 0;
 		mainClient.send({}, { cmd : Client2ServerFlag.setup, fileSize : file.size / 1000000 });
 		callback = callback || cbFun;
@@ -167,7 +180,6 @@ kotrans.client = (function () {
 
 	function initFile() {
 		//console.log(file);
-		console.log('Initializing file: '  + file.name);
 		fileChunks = [];
 		var currentSize = chunk_size;
 		var i = 0;
@@ -185,21 +197,27 @@ kotrans.client = (function () {
 			currentSize += chunk_size;
 		}
 		totalChunks = fileChunks.length;
-		send();
+		checkExists();
 	}
+
+	function checkExists() {
+		mainClient.send({}, {
+			cmd : Client2ServerFlag.exists,
+			fileName : file.name,
+			iteration : 0
+		});
+	}
+
 	var interval;
 	function send() {
-		interval = setInterval(function() {
-			mainClient.send({}, { cmd : Server2ClientFlag.updateClient });
-		}, 1000);
 		clients.forEach(function(client) {
 			if(fileChunks.length !== 0) {
 				var chunk = fileChunks.shift();
 				client.send(chunk, {
-					chunkName : file.name + '_' + chunkNumber++,
+					chunkName : fileName + '_' + chunkNumber++,
 					chunkSize : chunk.size,
 					fileSize : file.size,
-					fileName : file.name,
+					fileName : fileName,
 					cmd : Client2ServerFlag.send
 				});
 			}
@@ -207,7 +225,6 @@ kotrans.client = (function () {
 	}
 
 	function finish() {
-		clearInterval(interval);
 		if(callback) {
 			callback();
 		}
