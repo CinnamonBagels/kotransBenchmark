@@ -53,6 +53,8 @@ kotrans.client = (function () {
     var totalChunks;
     var sentChunks;
     var allTransferred;
+    var working;
+    var percentComplete;
 	function createClient(options) {
 		var i;
 		var options = options || {};
@@ -96,6 +98,8 @@ kotrans.client = (function () {
 				} else {
 					send();
 				}
+			} else if(meta.cmd === Server2ClientFlag.updateClient) {
+				percentComplete = meta.percent;
 			}
 		});
 
@@ -146,12 +150,6 @@ kotrans.client = (function () {
 				}
 			} else if(meta.cmd === Server2ClientFlag.commandComplete) {
 				finish();
-			} else if(meta.cmd === Server2ClientFlag.updateClient) {
-				//Will be sent the file name and the % compete
-				//lots of overhead if client that is sending is also giving updates.
-			} else if(meta.cmd === Client2ServerFlag.main_id) {
-			} else if(meta.cmd === Client2ServerFlag.stream_id) {
-
 			}
 		});
 
@@ -168,7 +166,9 @@ kotrans.client = (function () {
 
 	var callback;
 	function sendFile(sendingFile, cbFun) {
+		working = true;
 		totalChunks = 0;
+		percentComplete = 0;
 		sentChunks = 0;
 		allTransferred = false;
 		file = sendingFile;
@@ -179,13 +179,11 @@ kotrans.client = (function () {
 	}	
 
 	function initFile() {
-		//console.log(file);
 		fileChunks = [];
 		var currentSize = chunk_size;
 		var i = 0;
 
 		while (i < file.size) {
-			//console.log(i);
 			//for the last chunk < chunk_size
 			if (i + chunk_size > file.size) {
 				fileChunks.push(file.slice(i));
@@ -210,6 +208,12 @@ kotrans.client = (function () {
 
 	var interval;
 	function send() {
+		interval = setInterval(function() {
+			mainClient.send({}, {
+				cmd : Server2ClientFlag.updateClient,
+				percent : (!working || totalChunks === 0) ? 0 : sentChunks / totalChunks
+			});
+		}, 1000);
 		clients.forEach(function(client) {
 			if(fileChunks.length !== 0) {
 				var chunk = fileChunks.shift();
@@ -225,13 +229,20 @@ kotrans.client = (function () {
 	}
 
 	function finish() {
+		clearInterval(interval);
+		working = false;
 		if(callback) {
 			callback();
 		}
 	}
 
+	function getProgress() {
+		return percentComplete;
+	}
+
 	return {
 		createClient: createClient,
-		sendFile: sendFile
+		sendFile: sendFile,
+		getProgress : getProgress
 	}
 })();
