@@ -54,7 +54,6 @@ kotrans.client = (function () {
     var sentChunks;
     var allTransferred;
     var working;
-    var percentComplete;
 	function createClient(options) {
 		var i;
 		var options = options || {};
@@ -98,8 +97,6 @@ kotrans.client = (function () {
 				} else {
 					send();
 				}
-			} else if(meta.cmd === Server2ClientFlag.updateClient) {
-				percentComplete = meta.percent;
 			}
 		});
 
@@ -168,7 +165,6 @@ kotrans.client = (function () {
 	function sendFile(sendingFile, cbFun) {
 		working = true;
 		totalChunks = 0;
-		percentComplete = 0;
 		sentChunks = 0;
 		allTransferred = false;
 		file = sendingFile;
@@ -209,9 +205,10 @@ kotrans.client = (function () {
 	var interval;
 	function send() {
 		interval = setInterval(function() {
+			console.log(!working || totalChunks === 0 ? 0 : sentChunks / totalChunks);
 			mainClient.send({}, {
 				cmd : Server2ClientFlag.updateClient,
-				percent : (!working || totalChunks === 0) ? 0 : sentChunks / totalChunks
+				percent : !working || totalChunks === 0 ? 0 : sentChunks / totalChunks
 			});
 		}, 1000);
 		clients.forEach(function(client) {
@@ -229,7 +226,6 @@ kotrans.client = (function () {
 	}
 
 	function finish() {
-		clearInterval(interval);
 		working = false;
 		if(callback) {
 			callback();
@@ -237,7 +233,7 @@ kotrans.client = (function () {
 	}
 
 	function getProgress() {
-		return percentComplete;
+		return !working || totalChunks === 0 ? 0 : sentChunks / totalChunks;
 	}
 
 	return {
